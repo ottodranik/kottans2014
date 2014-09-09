@@ -1,0 +1,71 @@
+
+requires = [
+  'ui.router'
+  'ngSanitize'
+  'ngResource'
+  'ui.bootstrap'
+  'ui.bootstrap.tpls'
+]
+states = [
+  name: 'root'
+  opts:
+    url: '/'
+    templateUrl: "/templates/layouts/templates/main"
+    controller: "MainController"
+    data:
+      requireLogin: true
+,
+  name: 'signin'
+  opts:
+    url: '/sign_in'
+    templateUrl: "/templates/layouts/templates/signin"
+,
+  name: 'signup'
+  opts:
+    url: '/sign_up'
+    templateUrl: "/templates/layouts/templates/signup"
+,
+  name: 'sql'
+  opts:
+    url: '/sql'
+    templateUrl: "<%= asset_path('sql.html') %>"
+]
+
+@App = angular.module 'App', requires
+
+App.run ($rootScope, $state, auth, $urlRouter, modal)->
+  $rootScope.$state = $state
+
+  # On change url location
+  $rootScope.$on '$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
+    if toState.data? and !!toState.data.requireLogin and !auth.isLoggedIn()
+      event.preventDefault()
+      auth.authReady().then (resp)->
+        if !resp || resp.data.error
+          modal.create('signin')
+        else if resp.data.user
+          $rootScope.user = resp.data.user
+          $state.go toState.name
+
+
+App.config ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider, $provide) ->
+  $locationProvider.html5Mode true
+  $httpProvider.defaults.headers.common["X-CSRF-TOKEN"] = $("meta[name=\"csrf-token\"]").attr("content")
+
+  $urlRouterProvider.when '', '/'
+  $urlRouterProvider.rule ($injector, $location) ->
+    $state = $injector.get "$state"
+    goto = $location.$$search.goto
+    if goto
+      for state in states
+        if state.opts.url == '/'+goto
+          $state.go state.name
+          return true
+      $location.replace().url '/' + goto
+
+  $urlRouterProvider.otherwise ($injector, $location)->
+    $state = $injector.get "$state"
+    $state.go "root"
+
+  for state in states
+    $stateProvider.state state.name, state.opts

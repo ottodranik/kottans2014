@@ -1,0 +1,95 @@
+
+%div{:class => 'info', 'ng-show' => 'infoShow'}
+  %div.close{'ng-click' => 'infoShow = !infoShow'}
+  %div
+    |RU: Посмотреть ответы на задание по SQL можно по
+    %a{:href => "/sql"} ссылке
+  %div
+    |EN: Answers on SQL tasks
+    %a{:href => "/sql"} here
+
+%div{'ng-controller' => 'SignController', :class => 'sign_out'}
+  %span {{user.email}}
+  %span.sep-line
+  %a.submit.active{'ng-click' => 'signOut()'} Sign Out
+
+
+.container{'ng-controller' => "MainController"}
+  %div.title-main
+    %h2
+      SIMPLE TODO LIST
+
+  %h3.no-projects{"ng-show" => "!projects.length"} No projects
+
+  %ul.ul-projects{"ng-show" => "projects.length", :id=>"sortable"}
+
+    %li{"ng-repeat" => "(pIndex, project) in projects", 'data-project-index' => '{{pIndex}}', 'on-repeat-finish-projects' => true}
+      %table.project-table
+        %tbody
+          %tr.project-title-block{'ng-mouseover' => 'buttons_show_project = true', 'ng-mouseleave' => 'buttons_show_project = false'}
+            %td{:width => "85%"}
+              %div.project-title{"ng-if" => "type != 'project' || editing.id != project.id", "ng-dblclick" => "active('project', project, pIndex)"} {{project.name}}
+              %div.project-title-edit-block{"ng-if" => "type == 'project' && editing.id == project.id"}
+                %form.input-group{'ng-submit' => "save('project', project, pIndex)", :name => "UpdateProject{{project.id}}"}
+                  %input.form-control{:type => "text", "ng-model" => "project.name", 'required' => true}
+                  %span.input-group-btn
+                    %button.btn.btn-success{:type => 'submit', 'ng-disabled' => "UpdateProject{{project.id}}.$invalid || UpdateProject{{project.id}}.$pristine || check_default_name(project.name)"} Update
+                    %button.btn.btn-warning{"ng-click" => "cancel(pIndex)"} Cancel
+            %td{:width => "15%"}
+              %div.edit-nav-menu{'ng-if' => "buttons_show_project || (type == 'project' && editing.id == project.id)"}
+                %div.edit-nav-item{"ng-click" => "active('project', project, pIndex)", :title => 'Edit TODO list',}
+                  %i.fa.fa-edit.fa-lg
+                %div.sep-line
+                %div.edit-nav-item{'confirm-click' => true, :title => 'Delete TODO list', 'confirmed-click' => "destroy('project', project, pIndex)"}
+                  %i.fa.fa-trash.fa-lg
+
+          %tr.project-add-task
+            %td{:width => "100%", :colspan => 2}
+              %form{'ng-submit' => "save('task', project.task, pIndex)", :name => "AddTask{{project.id}}"}
+                %div.input-group
+                  %input.form-control{'ng-model' => 'project.task.name', 'required' => true, 'ng-disabled' => 'editing'}
+                  %span.input-group-btn
+                    %button.btn.btn-success{:type => 'submit', 'ng-disabled' =>"AddTask{{project.id}}.$invalid || AddTask{{project.id}}.$pristine || editing"} Add task
+
+
+      %ul.ul-tasks{'ng-if' => '!project.tasks.length'}
+        %li
+          %table
+            %tbody
+              %tr
+                %td No tasks
+
+      %ul.ul-tasks{'ng-if' => 'project.tasks.length'}
+        %li{'ng-repeat' => "(tIndex, task) in project.tasks", 'data-project-index' => '{{pIndex}}', 'data-task-index' => '{{tIndex}}', 'on-repeat-finish-tasks' => true, 'ng-mouseover' => 'buttons_show_task = true', 'ng-mouseleave' => 'buttons_show_task = false'}
+          %table
+            %tbody
+              %tr
+                %td{:width => "5%"}
+                  %input{:type => 'checkbox', 'ng-model' => "task.status", 'ng-change' => "status('task', task, pIndex)", 'ng-true-value' => 1, 'ng-false-value' => 0 }
+                %td{:width => "63%"}
+                  %div.project-title{"ng-if" => "type != 'task' || editing.id != task.id", "ng-dblclick" => "active('task', task, pIndex, tIndex)"} {{task.name}}
+                  %div.project-title-edit-block{"ng-if" => "type == 'task' && editing.id == task.id"}
+                    %form.input-group{'ng-submit' => "save('task', task, pIndex)", :name => "UpdateTask{{task.id}}"}
+                      %input.form-control{:type => "text", "ng-model" => "task.name", 'required' => true}
+                      %span.input-group-btn
+                        %button.btn.btn-success{:type => 'submit', 'ng-disabled' => "UpdateTask{{task.id}}.$invalid || UpdateProject{{UpdateTask.id}}.$pristine || check_default_name(task.name)"} Update
+                        %button.btn.btn-warning{"ng-click" => "cancel(pIndex, tIndex)"} Cancel
+                %td{:width => "17%"}
+                  %div.edit-nav-menu.datepicker{:title => 'Change deadline of task'}
+                    %span.input-group{'ng-controller' => 'DatepickerCtrl'}
+                      %input.form-control{"close-text" => "Close", "datepicker-options" => "dateOptions", "datepicker-popup" => "{{format}}", "is-open" => "opened", "max-date" => "'2015-06-22'", "min-date" => "minDate", "ng-model" => "task.deadline", "ng-required" => "true", :type => "text", 'ng-change' => "select_date('task', task, task.deadline)", 'disabled' => true}
+                      %span.input-group-btn
+                        %button.btn.btn-default{"ng-click" => "open($event)", :type => "button"}
+                          %i.glyphicon.glyphicon-calendar
+                %td{:width => "15%"}
+                  %div.edit-nav-menu{'ng-show' => "buttons_show_task || (type == 'task' && editing.id == task.id)"}
+                    %div.edit-nav-item{"ng-click" => "active('task', task, pIndex, tIndex)", :title => 'Edit task'}
+                      %i.fa.fa-edit.fa-lg
+                    %div.sep-line
+                    %div.edit-nav-item{'confirm-click' => true, 'confirmed-click' => "destroy('task', task, pIndex, tIndex)", :title => 'Delete task'}
+                      %i.fa.fa-trash.fa-lg
+
+  %button.btn.btn-custom-blue.btn-primary.btn-lg.btn-block.center{:type => "submit", "ng-click" => "save('project')"} Add TODO list
+
+%div{'ng-if' => 'error_message', :style => "position:absolute; top:0; right:0; width:300px; padding:50px 0; background:red; text-align:center"}
+  %span {{error_message}}

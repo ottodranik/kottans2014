@@ -1,0 +1,57 @@
+%div.sign_out
+  %a.btn.btn-primary{:href => '/'} Return to projects
+
+.container.sql-tasks{'ng-controller' => "SQLController"}
+
+  %div.sql-answer
+    %p
+      1. get all statuses, not repeating, alphabetically ordered
+      %span ВАЖНО! У меня в таблице все статусы имеют только два значения 1 и 0 (выполнено или не выполнено)
+    %pre
+      SELECT tasks.status as status FROM tasks GROUP BY status ORDER BY status ASC
+    %button.btn.btn-success{'ng-click' => 'send_query(1)'} SEND QUERY 1
+    %div.asnwer{'ng-bind-html' => "to_trusted(query_answers[0])"}
+
+  %div.sql-answer
+    %p 2. get the count of all tasks in each project, order by tasks count descending
+    %pre SELECT projects.id, projects.name, count(tasks.id) as task_count FROM projects LEFT JOIN tasks ON tasks.project_id = projects.id GROUP BY projects.id ORDER BY task_count DESC;
+    %button.btn.btn-success{'ng-click' => 'send_query(2)'} SEND QUERY 2
+    %div.asnwer{'ng-bind-html' => "to_trusted(query_answers[1])"}
+
+  %div.sql-answer
+    %p 3. get the count of all tasks in each project, order by projects names
+    %pre SELECT projects.id, projects.name, count(tasks.id) as task_count FROM projects LEFT JOIN tasks ON tasks.project_id = projects.id GROUP BY projects.id ORDER BY projects.name
+    %button.btn.btn-success{'ng-click' => 'send_query(3)'} SEND QUERY 3
+    %div.asnwer{'ng-bind-html' => "to_trusted(query_answers[2])"}
+
+  %div.sql-answer
+    %p 4. get the tasks for all projects having the name beginning with 'N' letter
+    %pre SELECT tasks.*, projects.name as project_name FROM tasks LEFT JOIN projects ON projects.id = tasks.project_id WHERE projects.name LIKE 'N%'
+    %button.btn.btn-success{'ng-click' => 'send_query(4)'} SEND QUERY 4
+    %div.asnwer{'ng-bind-html' => "to_trusted(query_answers[3])"}
+
+  %div.sql-answer
+    %p 5. get the list of all projects containing the 'a' letter in the middle of the name, and show the tasks count near each project. Mention that there can exist projects without tasks and tasks with project_id=NULL
+    %pre SELECT projects.id, projects.name, count(tasks.id) as task_count FROM projects LEFT JOIN tasks ON tasks.project_id = projects.id WHERE projects.name LIKE '%a%' GROUP BY projects.id ORDER BY task_count DESC
+    %button.btn.btn-success{'ng-click' => 'send_query(5)'} SEND QUERY 5
+    %div.asnwer{'ng-bind-html' => "to_trusted(query_answers[4])"}
+
+  %div.sql-answer
+    %p 6. get the list of tasks with duplicate names. Order alphabetically
+    %pre SELECT name, count(*) as count  FROM tasks GROUP BY name HAVING count > 1 ORDER BY name ASC
+    %button.btn.btn-success{'ng-click' => 'send_query(6)'} SEND QUERY 6
+    %div.asnwer{'ng-bind-html' => "to_trusted(query_answers[5])"}
+
+  %div.sql-answer
+    %p 7. get the list of tasks having several exact matches of both name and status, from the project 'Garage'. Order by matches count
+    %pre SELECT tasks.name, tasks.status, projects.name, count(*) as count FROM tasks LEFT JOIN projects ON projects.id = tasks.project_id WHERE projects.name = "Garage" GROUP BY tasks.name, tasks.status HAVING count > 1 ORDER BY count ASC
+    %button.btn.btn-success{'ng-click' => 'send_query(7)'} SEND QUERY 7
+    %div.asnwer{'ng-bind-html' => "to_trusted(query_answers[6])"}
+
+  %div.sql-answer
+    %p
+      8. get the list of project names having more than 10 tasks in status 'completed'. Order by project_id
+      %span ВАЖНО! У меня в таблице все статусы имеют только два значения 1 и 0 (выполнено или не выполнено). Статуса 'completed' в таблице нет. Вместо него в запросе к БД используется '1'.
+    %pre SELECT projects.*, count(tasks.id) as count FROM projects LEFT JOIN tasks ON projects.id = tasks.project_id WHERE tasks.status = 'completed' GROUP BY projects.name HAVING count > 10 ORDER BY projects.id ASC
+    %button.btn.btn-success{'ng-click' => 'send_query(8)'} SEND QUERY 8
+    %div.asnwer{'ng-bind-html' => "to_trusted(query_answers[7])"}

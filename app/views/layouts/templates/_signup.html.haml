@@ -1,0 +1,11 @@
+%div{'ng-controller' => 'SignController'}
+  %form.reg-form{'name' =>'regForm'}
+    %div.modal-row
+      %input.mtm.mrsm{ type: :text, placeholder: 'Электронная почта', name: 'email', 'ng-model' => 'user.email', 'required' => 'true', 'type'=>"email", 'server-validation'=>'true' }
+      %input.mtm{ type: :password, placeholder: 'Пароль', name: 'password', 'ng-model' => 'user.password', 'required' => 'true', 'ng-minlength' => '8', 'server-validation'=>'true' }
+    %div.modal-row.mtxl
+      %div.submit.active{'ng-click' => 'signUp()'}
+        %span Зарегистрироваться
+  %div.message-part-container{'ng-show' => '!!message'}
+    %div.modal-row
+      %p.message {{message}}

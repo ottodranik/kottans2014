@@ -1,0 +1,18 @@
+%div.modal-auth
+  %h2 Вход
+  %form.reg-form{ 'ng-submit' => 'signIn()', :name => 'signForm' }
+    %div.modal-row
+      %input.form-control{ type: :email, placeholder: 'Электронная почта', name: 'email', 'ng-model' => 'formData.user.email','ng-required' => true, 'server-validation' => true}
+    %div.modal-row
+      %input.form-control{ type: :password, placeholder: 'Пароль', name: 'password',  'ng-model' => 'formData.user.password', 'ng-required' => true, 'server-validation' => true }
+    %div.row.row-fluid
+      %div.col-md-12
+        %div.message-container{'ng-show' => 'messages'}
+          %p.message{'ng-repeat' => '(index, msg) in messages'}
+            %span {{index*1+1}}. {{msg}}
+            %br
+      %div.col-md-12
+        %button.btn.btn-success{:type => 'submit', 'ng-disabled' => 'signForm.$invalid || signForm.$pristine'}
+          %span Войти
+        %a.btn.btn-primary{'ng-click' => 'goSignUp()'}
+          %span Регистрация

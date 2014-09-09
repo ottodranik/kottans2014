@@ -1,0 +1,26 @@
+<% if !@res.empty? %>
+  <table>
+    <% i = 0 %>
+    <% @res.each do |row| %>
+      <% if(i == 0) %>
+        <tr>
+          <% for attribute in row.attributes.keys %>
+            <td>
+              <%= attribute.humanize %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+      <% i += 1%>
+      <tr>
+        <% for attribute in row.attributes.keys %>
+          <td>
+            <%= row.attributes[attribute].to_s %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </table>
+<% else%>
+  <div>No data</div>
+<% end %>

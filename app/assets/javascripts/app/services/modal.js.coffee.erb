@@ -1,0 +1,41 @@
+angular.module('App').factory 'modal', ['$rootScope', '$http', '$modal', '$window', '$timeout', '$state', ($rootScope, $http, $modal, $window, $timeout, $state)->
+
+  $rootScope.modalInstance = null
+
+  return {
+    create: (type, size)->
+      if type == 'signin'
+        templateUrl = "<%= asset_path('modal/signin.html') %>"
+        controller = 'SignController'
+      else if type == 'signup'
+        templateUrl = "<%= asset_path('modal/signup.html') %>"
+        controller = 'SignController'
+
+      $rootScope.modalInstance = $modal.open(
+        {
+          templateUrl: templateUrl
+          controller: controller
+          backdrop: 'static'
+          keyboard: false
+          size: size
+          close: ->
+            this.dismiss('cancel');
+          resolve:
+            items: ->
+              # console.log 1111
+        }
+      )
+
+      $rootScope.modalInstance.result.then( (data)->
+        # $scope.selected = selectedItem
+        console.log data
+      , ->
+        # $log.info('Modal dismissed at: ' + new Date())
+      )
+
+    destroy: ()->
+      if $rootScope.modalInstance
+        $rootScope.modalInstance.close()
+
+  }
+]
