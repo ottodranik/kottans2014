@@ -13,11 +13,11 @@ class SqlController < ApplicationController
     elsif params[:id] == 5
       q = "SELECT projects.id, projects.name, count(tasks.id) as task_count FROM projects LEFT JOIN tasks ON tasks.project_id = projects.id WHERE projects.name LIKE '%a%' GROUP BY projects.id ORDER BY task_count DESC"
     elsif params[:id] == 6
-      q = 'SELECT name, count(*) as count FROM tasks GROUP BY name HAVING count > 1 ORDER BY name ASC'
+      q = 'SELECT name, count(*) as count FROM tasks GROUP BY name HAVING count(*) > 1 ORDER BY name ASC'
     elsif params[:id] == 7
-      q = "SELECT tasks.name, tasks.status, projects.name, count(*) as count FROM tasks LEFT JOIN projects ON projects.id = tasks.project_id WHERE projects.name = 'Garage' GROUP BY tasks.name, tasks.status HAVING count > 1 ORDER BY count ASC"
+      q = "SELECT tasks.name, tasks.status, projects.name, count(*) as count FROM tasks LEFT JOIN projects ON projects.id = tasks.project_id WHERE projects.name = 'Garage' GROUP BY tasks.name, tasks.status HAVING count(*) > 1 ORDER BY count ASC"
     elsif params[:id] == 8
-      q = 'SELECT projects.*, count(tasks.id) as count FROM projects LEFT JOIN tasks ON projects.id = tasks.project_id WHERE tasks.status = 1 GROUP BY projects.name HAVING count > 10 ORDER BY projects.id ASC'
+      q = 'SELECT projects.*, count(tasks.id) as count FROM projects LEFT JOIN tasks ON projects.id = tasks.project_id WHERE tasks.status = 1 GROUP BY projects.name HAVING count(tasks.id) > 10 ORDER BY projects.id ASC'
     end
     @res = Project.find_by_sql(q)
     render :partial => 'query'
