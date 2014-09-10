@@ -39,21 +39,18 @@
   %div.sql-answer
     %p 6. get the list of tasks with duplicate names. Order alphabetically
     %pre SELECT name, count(*) as count  FROM tasks GROUP BY name HAVING count > 1 ORDER BY name ASC
+    %strong For POSTGRESQL:
     %pre
-      %strong
-        For POSTGRESQL:
-      &nbsp;SELECT name, count(*) as count FROM tasks GROUP BY name HAVING count(*) > 1 ORDER BY name ASC
+      SELECT name, count(*) as count FROM tasks GROUP BY name HAVING count(*) > 1 ORDER BY name ASC
     %button.btn.btn-success{'ng-click' => 'send_query(6)'} SEND QUERY 6
     %div.asnwer{'ng-bind-html' => "to_trusted(query_answers[5])"}
 
   %div.sql-answer
     %p 7. get the list of tasks having several exact matches of both name and status, from the project 'Garage'. Order by matches count
     %pre SELECT tasks.name, tasks.status, projects.name, count(*) as count FROM tasks LEFT JOIN projects ON projects.id = tasks.project_id WHERE projects.name = 'Garage' GROUP BY tasks.name, tasks.status HAVING count > 1 ORDER BY count ASC
-    %pre SELECT tasks.name, tasks.status, projects.name, count(*) as count FROM tasks LEFT JOIN projects ON projects.id = tasks.project_id WHERE projects.name = 'Garage' GROUP BY tasks.name, tasks.status HAVING count > 1 ORDER BY count ASC
+    %strong For POSTGRESQL:
     %pre
-      %strong
-        For POSTGRESQL:
-      &nbsp;SELECT tasks.name, tasks.status, count(*) as count, projects.name as project_name FROM tasks LEFT JOIN projects ON projects.id = tasks.project_id WHERE projects.name LIKE 'Garage' GROUP BY tasks.name, tasks.status, projects.name HAVING count(*) > 1 ORDER BY count ASC
+      SELECT tasks.name, tasks.status, count(*) as count, projects.name as project_name FROM tasks LEFT JOIN projects ON projects.id = tasks.project_id WHERE projects.name LIKE 'Garage' GROUP BY tasks.name, tasks.status, projects.name HAVING count(*) > 1 ORDER BY count ASC
     %button.btn.btn-success{'ng-click' => 'send_query(7)'} SEND QUERY 7
     %div.asnwer{'ng-bind-html' => "to_trusted(query_answers[6])"}
 
@@ -62,9 +59,8 @@
       8. get the list of project names having more than 10 tasks in status 'completed'. Order by project_id
       %span ВАЖНО! У меня в таблице все статусы имеют только два значения 1 и 0 (выполнено или не выполнено). Статуса 'completed' в таблице нет. Вместо него в запросе к БД используется '1'.
     %pre SELECT projects.*, count(tasks.id) as count FROM projects LEFT JOIN tasks ON projects.id = tasks.project_id WHERE tasks.status = 'completed' GROUP BY projects.name HAVING count > 10 ORDER BY projects.id ASC
+    %strong For POSTGRESQL:
     %pre
-      %strong
-        For POSTGRESQL:
-      &nbsp;SELECT projects.*, count(tasks.id) as count FROM projects LEFT JOIN tasks ON projects.id = tasks.project_id WHERE tasks.status = 1 GROUP BY projects.name, projects.id HAVING count(tasks.id) > 10 ORDER BY projects.id ASC
+      SELECT projects.*, count(tasks.id) as count FROM projects LEFT JOIN tasks ON projects.id = tasks.project_id WHERE tasks.status = 1 GROUP BY projects.name, projects.id HAVING count(tasks.id) > 10 ORDER BY projects.id ASC
     %button.btn.btn-success{'ng-click' => 'send_query(8)'} SEND QUERY 8
     %div.asnwer{'ng-bind-html' => "to_trusted(query_answers[7])"}
