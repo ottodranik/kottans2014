@@ -31,9 +31,8 @@ App.controller 'SignController', ['$scope', 'auth', 'modal', '$rootScope', ($sco
         else
           i = 0
           for own key, value of data
-            for own key2, value2 of value
-              $scope.messages[i] = value2
-              i++
+            $scope.messages[i] = value
+            i++
 
   $scope.signOut = ->
     auth.signOut()
