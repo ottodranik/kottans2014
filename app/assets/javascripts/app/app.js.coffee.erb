@@ -48,12 +48,12 @@ App.run ($rootScope, $state, auth, $urlRouter, modal)->
           $state.go toState.name
 
 
-App.config ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider) ->
+App.config ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider)->
   $locationProvider.html5Mode true
   $httpProvider.defaults.headers.common["X-CSRF-TOKEN"] = $("meta[name=\"csrf-token\"]").attr("content")
 
   $urlRouterProvider.when '', '/'
-  $urlRouterProvider.rule ($injector, $location) ->
+  $urlRouterProvider.rule ($injector, $location)->
     $state = $injector.get "$state"
     goto = $location.$$search.goto
     if goto
