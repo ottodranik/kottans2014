@@ -20,7 +20,6 @@ gem 'rolify', :git => 'git://github.com/EppO/rolify.git'
 gem 'haml-rails'
 gem 'pg'
 gem 'formtastic'
-gem 'activeadmin', github: 'gregbell/active_admin'
 
 gem 'rails-assets-angular'
 gem 'rails-assets-angular-sanitize'
