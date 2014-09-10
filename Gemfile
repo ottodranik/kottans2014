@@ -63,3 +63,7 @@ group :test do
   gem 'database_cleaner', '1.0.1'
   gem 'email_spec'
 end
+
+gem 'rails_12factor', group: :production
+
+ruby "2.1.2"
