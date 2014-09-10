@@ -1,4 +1,10 @@
 GIT
+  remote: git://github.com/EppO/rolify.git
+  revision: 7640df4e1a55bb932eeea57024f1471a442307ac
+  specs:
+    rolify (3.4.1)
+
+GIT
   remote: git://github.com/gregbell/active_admin.git
   revision: 41d5176f3682abef2c09c169083f82df87ed54f1
   specs:
@@ -270,7 +276,6 @@ GEM
       polyamorous (~> 1.1)
     responders (1.0.0)
       railties (>= 3.2, < 5)
-    rolify (3.4.0)
     rspec-core (3.0.4)
       rspec-support (~> 3.0.0)
     rspec-expectations (3.0.4)
@@ -357,7 +362,7 @@ DEPENDENCIES
   rails-assets-angular-ui-router
   rails-assets-angulartics
   rails_12factor
-  rolify
+  rolify!
   rspec-rails
   sass-rails (~> 4.0.3)
   seedbank!

@@ -16,7 +16,7 @@ gem 'jbuilder', '~> 2.0'
 # gem 'sdoc', '~> 0.4.0',          group: :doc
 gem 'devise'
 gem 'cancancan', '~> 1.8'
-gem 'rolify'
+gem 'rolify', :git => 'git://github.com/EppO/rolify.git'
 gem 'haml-rails'
 gem 'pg'
 gem 'formtastic'
