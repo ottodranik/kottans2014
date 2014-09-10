@@ -48,7 +48,7 @@ App.run ($rootScope, $state, auth, $urlRouter, modal)->
           $state.go toState.name
 
 
-App.config ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider, $provide) ->
+App.config ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider) ->
   $locationProvider.html5Mode true
   $httpProvider.defaults.headers.common["X-CSRF-TOKEN"] = $("meta[name=\"csrf-token\"]").attr("content")
 
